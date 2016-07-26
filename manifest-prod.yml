@@ -1,0 +1,9 @@
+applications:
+- name: springone-demo-app
+  memory : 4096
+  instances: 1
+  services:
+    - dish_properties
+  env:
+    SPRING_PROFILES_ACTIVE: production
+    APP_LOGGING_LEVEL: INFO

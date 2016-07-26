@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+                  xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+                  xmlns:tns="http://www.dish.com/wsdl/Demo/Demo-v1" xmlns:v1_0="http://www.dish.com/wsdl/Demo/Demo-v1.0"
+                  name="Demo-v1.wsdl" targetNamespace="http://www.dish.com/wsdl/Demo/Demo-v1">
+    <wsdl:types>
+        <xsd:schema xmlns:getTaxQ="http://www.dish.com/schema/Demo/GetTaxQuote/2016_08_01"
+                    xmlns:svcctx="http://www.dish.com/schema/common/ServiceContext/2016_08_01"
+                    targetNamespace="http://www.dish.com/wsdl/Demo/Demo-v1.0" elementFormDefault="qualified">
+            <xsd:import namespace="http://www.dish.com/schema/Demo/GetTaxQuote/2016_08_01"
+                        schemaLocation="GetTaxQuote-2016_08_01.xsd"/>
+            <xsd:import namespace="http://www.dish.com/schema/common/ServiceContext/2016_08_01"
+                        schemaLocation="ServiceContext-2016_08_01.xsd"/>
+            <xsd:element name="getTaxQuoteRequest">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="serviceRequestContext" type="svcctx:ServiceRequestContextType"/>
+                        <xsd:element name="getTaxQuoteInput" type="getTaxQ:GetTaxQuoteInputType"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="getTaxQuoteResponse">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="serviceResponseContext" type="svcctx:ServiceResponseContextType"/>
+                        <xsd:element name="getTaxQuoteOutput" type="getTaxQ:GetTaxQuoteOutputType" minOccurs="0"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+        </xsd:schema>
+    </wsdl:types>
+    <wsdl:message name="getTaxQuoteInput">
+        <wsdl:part name="parameters" element="v1_0:getTaxQuoteRequest"/>
+    </wsdl:message>
+    <wsdl:message name="getTaxQuoteOutput">
+        <wsdl:part name="parameters" element="v1_0:getTaxQuoteResponse"/>
+    </wsdl:message>
+    <wsdl:portType name="Demo_v1_0_PortType">
+        <wsdl:operation name="getTaxQuote">
+            <wsdl:input name="getTaxQuoteRequest" message="tns:getTaxQuoteInput"/>
+            <wsdl:output name="getTaxQuoteResponse" message="tns:getTaxQuoteOutput"/>
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="Demo_v1_0_SOAP11Binding" type="tns:Demo_v1_0_PortType">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <wsdl:operation name="getTaxQuote">
+            <soap:operation soapAction="http://www.dish.com/wsdl/Demo/getTaxQuote" style="document"/>
+            <wsdl:input name="getTaxQuoteRequest">
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output name="getTaxQuoteResponse">
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="Demo_v1_0">
+        <wsdl:port name="tns:Demo_v1_0_Port" binding="tns:Demo_v1_0_SOAP11Binding">
+            <soap:address location="http://dmwbt52:15000/ws/Demo.v1_0:demoWS"/>
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>

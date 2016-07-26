@@ -1,0 +1,68 @@
+# Spring Boot port
+server:
+  port: 8084
+
+#### Backend adapter service uri
+adapter-api-app:
+  uri: http://localhost:9876/adapter-api-simulator/adapter/send
+  readTimeOut: 3000
+
+cft:
+  names: SOAPUI,TEST
+
+message:
+  getTaxQuote:
+    adapterError:
+      statusCode: 1006
+      statusMessage: One of more input is missing or invalid
+      displayMessage: One of more input is missing or invalid
+      keyword:
+        - "Attribute is required"
+        - "Invalid length for request field"
+    adapterDown:
+      statusCode: 2402
+      statusMessage: Technical difficulties with Billing system
+      displayMessage: Backend is down. Billing system is unavailable
+      keyword:
+        - "Billing system is unavailable"
+    other:
+      statusCode: 2301
+      statusMessage: This request cannot be completed due to technical issues
+      displayMessage: This request cannot be completed due to technical issues. Try again later or call for assistance.
+
+#if multiple databses
+#database:
+#  connection:
+#    db1:
+#      driverClassName: oracle.jdbc.driver.OracleDriver
+#      url: jdbc:oracle:thin:@host:1540:db1name
+#      username: username
+#      password: password
+#      initial-size: 5
+#      max-active: 50
+#      min-idle: 5
+#      max-idle: 50
+#      max-wait: 10000
+#    db2:
+#      driverClassName: oracle.jdbc.driver.OracleDriver
+#      url: jdbc:oracle:thin:@host:1540:db2name
+#      username: username
+#      password: password
+#      initial-size: 5
+#      max-active: 50
+#      min-idle: 5
+#      max-idle: 50
+#      max-wait: 10000
+
+#if single db
+#spring:
+#  datasource:
+#    driverClassName: oracle.jdbc.driver.OracleDriver
+#    url: jdbc:oracle:thin:@host:1540:db1name
+#    username: username
+#    password: password
+#    initial-size: 5
+#    max-active: 50
+#    min-idle: 5
+#    max-idle: 50
+#    max-wait: 10000

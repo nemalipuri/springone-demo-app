@@ -1,0 +1,134 @@
+group 'com.dish.external'
+version '0.0.2'
+
+apply plugin: 'java'
+apply plugin: 'idea'
+apply plugin: 'spring-boot'
+
+allprojects {
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
+}
+
+buildscript {
+    ext {
+        springBootVersion = '1.3.3.RELEASE'
+        configClientVersion = '1.0.2.RELEASE'
+        dishZipkinVersion = '1.0.0'
+        lombokVersion = '1.12.2'
+        gradleGitPropertiesVersion = '1.4.11'
+    }
+    repositories {
+        maven {
+            //external repo
+            url "http://repo1.maven.org/maven2"
+
+            //Dish internal repo
+            //url 'https://.....dish.com/artifactory/repo'
+        }
+    }
+    dependencies {
+        classpath "org.springframework.boot:spring-boot-gradle-plugin:$springBootVersion"
+    }
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.13'
+}
+
+repositories {
+    //external repos
+    maven {
+        url "http://repo.spring.io/release"
+    }
+    maven {
+        url "http://repo1.maven.org/maven2"
+    }
+    maven {
+        url "http://repo.spring.io/snapshot"
+    }
+    maven {
+        url "http://repo.spring.io/milestone"
+    }
+    jcenter {
+        url "http://jcenter.bintray.com/"
+    }
+
+    //Dish internal repo
+    maven {
+        url "http://repo.spring.io/release"
+        //url 'https://.....dish.com/artifactory/repo'
+    }
+}
+
+task genJaxb {
+    ext.sourcesDir = "${buildDir}/generated-sources/jaxb"
+    ext.classesDir = "${buildDir}/classes/jaxb"
+    ext.schema = "src/main/resources/wsdl/Demo-v1.wsdl"
+
+    outputs.dir classesDir
+
+    doLast() {
+        project.ant {
+            taskdef name: "xjc", classname: "com.sun.tools.xjc.XJCTask",
+                classpath: configurations.jaxb.asPath
+            mkdir(dir: sourcesDir)
+            mkdir(dir: classesDir)
+
+            xjc(destdir: sourcesDir, schema: schema) {
+                arg(value: "-wsdl")
+                produces(dir: sourcesDir, includes: "**/*.java")
+            }
+
+            javac(destdir: classesDir, source: 1.8, target: 1.8, debug: true,
+                debugLevel: "lines,vars,source",
+                classpath: configurations.jaxb.asPath) {
+                src(path: sourcesDir)
+                include(name: "**/*.java")
+                include(name: "*.java")
+            }
+
+            copy(todir: classesDir) {
+                fileset(dir: sourcesDir, erroronmissingdir: false) {
+                    exclude(name: "**/*.java")
+                }
+            }
+        }
+    }
+}
+
+configurations {
+    jaxb
+}
+
+jar {
+    baseName = 'springone-demo-app'
+    from genJaxb.classesDir
+}
+
+dependencies {
+    compile(
+        "org.springframework.boot:spring-boot-starter",
+        "org.springframework.boot:spring-boot-starter-actuator",
+        "io.pivotal.spring.cloud:spring-cloud-services-starter-config-client:$configClientVersion",
+        "org.projectlombok:lombok:$lombokVersion",
+        "ch.qos.logback:logback-classic",
+        "org.springframework.cloud:spring-cloud-starter-zipkin:1.0.0.RC2",
+        "io.springfox:springfox-swagger-ui:2.4.0",
+        "io.springfox:springfox-swagger2:2.4.0",
+        "org.springframework.ws:spring-ws-core:2.2.2.RELEASE",
+        "org.apache.httpcomponents:httpclient:4.5.2",
+        "wsdl4j:wsdl4j:1.6.1",
+        files(genJaxb.classesDir).builtBy(genJaxb)
+
+        //"org.springframework.boot:spring-boot-starter-jdbc:$springBootVersion",
+        //"ojdbc6:ojdbc6:11.2.0.4"
+    )
+    jaxb("com.sun.xml.bind:jaxb-xjc:2.2.4-1")
+    testCompile(
+        'org.springframework.boot:spring-boot-starter-test'
+    )
+    bootRun {
+        systemProperties System.properties
+    }
+}

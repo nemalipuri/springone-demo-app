@@ -1,0 +1,44 @@
+# Application info
+info:
+  app:
+    artifact: ${project.artifactId}
+    name: ${project.name}
+    description: ${project.description}
+    version: ${project.version}
+    environment: ${spring.profiles.active}
+
+#App name and Sleuth properties
+spring:
+  application:
+    name: springone-demo-app
+  sleuth:
+     sampler:
+       percentage: 1
+     keys:
+       http:
+         headers: "X-Trace-Id,X-Span-Id,X-Context-Session-Id,X-Context-Request-Id,X-Context-Trace-Id"
+     enabled: true
+     log:
+       json:
+         enabled: true
+
+#Any http endpoints
+security:
+  basic:
+    enabled: false
+  user:
+    name: admin
+    password: secret
+
+
+# Spring Boot Actuator properties
+endpoints:
+  shutdown:
+    enabled: false
+management:
+  security:
+    enabled: false
+    role: SUPERUSER
+  context-path: /manage
+    
+  

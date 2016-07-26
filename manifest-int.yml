@@ -1,0 +1,8 @@
+applications:
+- name: springone-demo-app
+  memory : 2048
+  services:
+    - dish_properties
+  env:
+    SPRING_PROFILES_ACTIVE: integration
+    APP_LOGGING_LEVEL: DEBUG

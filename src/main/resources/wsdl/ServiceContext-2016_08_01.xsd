@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:tns="http://www.dish.com/schema/common/ServiceContext/2016_08_01"
+           targetNamespace="http://www.dish.com/schema/common/ServiceContext/2016_08_01">
+    <xs:complexType name="BusinessInteractionType">
+        <xs:sequence>
+            <xs:element name="interactionId" type="xs:string"/>
+            <xs:element name="interactionProcessName" type="tns:InteractionProcessType"/>
+            <xs:element name="requestId" type="xs:string"/>
+            <xs:element name="interactionStep" type="xs:string"/>
+            <xs:element name="customerFacingTool" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="ClientDetailType">
+        <xs:sequence>
+            <xs:element name="clientAppHost" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation>IP Address or Host name for client application calling the service. We can not
+                        auto discover client IP if it is NATed.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="clientAppTimestamp" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation>Timestamp when client application called the service
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="endUserIPAddress" type="xs:string" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>IP Address of the browser of end-user. This field is applicable only for web based
+                        client apps.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:simpleType name="InteractionProcessType">
+        <xs:restriction base="xs:string"/>
+    </xs:simpleType>
+    <xs:complexType name="ServiceRequestContextType">
+        <xs:sequence>
+            <xs:element name="serviceInteraction" type="tns:BusinessInteractionType"/>
+            <xs:element name="serviceClientDetails" type="tns:ClientDetailType"/>
+            <xs:element name="requestReceivedTimestamp" type="xs:string" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Client apps should not be populating this element as it is only going to be used
+                        by SOAP request handler. Timestamp when Service actually started working on the requested
+                        interaction instance
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="ServiceResponseContextType">
+        <xs:sequence>
+            <xs:element name="interactionId" type="xs:string"/>
+            <xs:element name="requestId" type="xs:string"/>
+            <xs:element name="requestReceivedTimestamp" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation>Timestamp when Service actually started working on the requested interaction
+                        instance
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="responseGeneratedTimestamp" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation>Timestamp when Service actually sent response back to calling app
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="serverHostPort" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation>Host and port address of the server which served this interaction instance
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="serviceDuration" type="xs:long">
+                <xs:annotation>
+                    <xs:documentation>Time (in msec) taken by service for the processing
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="statusCode" type="xs:string"/>
+            <xs:element name="statusMessage" type="xs:string" minOccurs="0"/>
+            <xs:element name="displayMessage" type="xs:string" minOccurs="0"/>
+        </xs:sequence>
+        <xs:attribute name="version" type="xs:string" default=""/>
+    </xs:complexType>
+    <xs:simpleType name="TraceLevelType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="NONE"/>
+            <xs:enumeration value="INFO"/>
+            <xs:enumeration value="DEBUG"/>
+        </xs:restriction>
+    </xs:simpleType>
+</xs:schema>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2010 rel. 2 (http://www.altova.com) by Dish Network (Dish Network) -->
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            xmlns:tns="http://www.dish.com/schema/Demo/GetTaxQuote/2016_08_01"
+            targetNamespace="http://www.dish.com/schema/Demo/GetTaxQuote/2016_08_01">
+    <xsd:complexType name="GetTaxQuoteInputType">
+        <xsd:sequence>
+            <xsd:element name="location" type="tns:LocationType"/>
+            <xsd:element name="itemList" type="tns:ItemListType"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="GetTaxQuoteOutputType">
+        <xsd:sequence>
+            <xsd:element name="location" type="tns:LocationType" minOccurs="0"/>
+            <xsd:element name="taxQuote" type="xsd:decimal" minOccurs="0"/>
+            <xsd:element name="itemList" type="tns:ItemListType" minOccurs="0"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="LocationType">
+        <xsd:sequence>
+            <xsd:element name="geographical" type="tns:GeographicalType"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="ItemListType">
+        <xsd:sequence>
+            <xsd:element name="count" type="xsd:nonNegativeInteger"/>
+            <xsd:element name="item" type="tns:ItemType" maxOccurs="unbounded"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="GeographicalType">
+        <xsd:sequence>
+            <xsd:element name="vertexCode" type="xsd:string"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="ItemType">
+        <xsd:sequence>
+            <xsd:element name="identifier" type="xsd:string"/>
+            <xsd:element name="billing" type="tns:BillingType"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="BillingType">
+        <xsd:sequence>
+            <xsd:element name="charge" type="xsd:decimal"/>
+            <xsd:element name="taxGroup" type="xsd:string" minOccurs="0"/>
+        </xsd:sequence>
+    </xsd:complexType>
+</xsd:schema>

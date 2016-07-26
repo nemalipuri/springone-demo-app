@@ -1,0 +1,7 @@
+applications:
+- name: springone-demo-app
+  services:
+    - dish_properties
+  env:
+    SPRING_PROFILES_ACTIVE: development
+    APP_LOGGING_LEVEL: DEBUG
